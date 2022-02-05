@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f8ccc5376432324f9afebbed2e1d014, type: 3}
+  m_Name: Questions
+  m_EditorClassIdentifier: 
+  questionSets:
+  - level: 0
+    questions:
+    - questionType: 0
+      questionText: What color are elepants typically?
+      questionImage: {fileID: 0}
+      questionAudio: {fileID: 0}
+      correctAnswerKey: Gray
+      answerChoices:
+      - Blue
+      - Red
+      - Grey
+      - Gray
+    - questionType: 1
+      questionText: What color share flowers?
+      questionImage: {fileID: 21300000, guid: 0dae5896251f09a41a5a4d087095215c, type: 3}
+      questionAudio: {fileID: 0}
+      correctAnswerKey: Magenta
+      answerChoices:
+      - Magenta
+      - Red
+      - Blue
+      - Green
+  - level: 1
+    questions:
+    - questionType: 1
+      questionText: What country is this?
+      questionImage: {fileID: 21300000, guid: 95549af3958b447478b9ed218727c4b9, type: 3}
+      questionAudio: {fileID: 0}
+      correctAnswerKey: Germany
+      answerChoices:
+      - France
+      - Italy
+      - Germany
+      - England
+    - questionType: 2
+      questionText: What insument is this?
+      questionImage: {fileID: 0}
+      questionAudio: {fileID: 8300000, guid: 0b351e18998bac541aefaa6d8639fd5e, type: 3}
+      correctAnswerKey: Flute
+      answerChoices:
+      - Piccolo
+      - Flute
+      - Tuba
+      - Violin
