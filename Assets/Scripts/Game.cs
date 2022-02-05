@@ -76,24 +76,31 @@ public class Game : MonoBehaviour
             }
         }
     }
-    public void NextQuestionSet()
+    //public void NextQuestionSet()
+    //{
+    //    if(level < questionDatabase.questionSets.Length - 1)
+    //    {
+    //        correctAnswers = 0;
+    //        currentQuestionIndex = 0;
+    //        level++;
+    //        PlayerPrefs.SetInt("level", level);
+    //        scoreScreen.gameObject.SetActive(false);
+    //        questionScreen.gameObject.SetActive(true);
+    //        LoadQuestionSet();
+    //        UseQuestionTemplate(currentQuestion.questionType);
+    //    }
+    //    else
+    //    {
+    //        LoadQuestionSet();
+    //        // load start menu
+    //        UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu");
+    //    }
+    //}
+
+    public void ReturnToMainMenu()
     {
-        if(level < questionDatabase.questionSets.Length - 1)
-        {
-            correctAnswers = 0;
-            currentQuestionIndex = 0;
-            level++;
-            PlayerPrefs.SetInt("level", level);
-            scoreScreen.gameObject.SetActive(false);
-            questionScreen.gameObject.SetActive(true);
-            LoadQuestionSet();
-            UseQuestionTemplate(currentQuestion.questionType);
-        }
-        else
-        {
-            // load start menu
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu");
-        }
+        // load start menu
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main Menu");
     }
 
     void NextQuestion()
@@ -106,11 +113,10 @@ public class Game : MonoBehaviour
         }
         else
         {
-            // do score screen
-            scoreScreen.gameObject.SetActive(true);
-            questionScreen.gameObject.SetActive(false);
-            scorePercentage.text = string.Format("Score: {0}%", (float)correctAnswers / (float)currentQuestionSet.questions.Count * 100);
-            scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", currentQuestionSet.questions.Count, correctAnswers);
+            LoadQuestionSet();
+            currentQuestionIndex = 0;
+            currentQuestion = currentQuestionSet.questions[currentQuestionIndex];
+            UseQuestionTemplate(currentQuestion.questionType);
         }
     }
 
@@ -127,9 +133,17 @@ public class Game : MonoBehaviour
             players.TakeDamage(1);
         }
 
-        // next question
-        ClearAnswers();
-        NextQuestion();
-        // reset answer options
+        if (players.dead)
+        {
+            // do score screen
+            scoreScreen.gameObject.SetActive(true);
+            questionScreen.gameObject.SetActive(false);
+            scorePercentage.text = string.Format("Score: {0}%", (float)correctAnswers / (float)currentQuestionSet.questions.Count * 100);
+            scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", currentQuestionSet.questions.Count, correctAnswers);
+        } else
+        {
+            ClearAnswers();
+            NextQuestion();
+        }
     }
 }

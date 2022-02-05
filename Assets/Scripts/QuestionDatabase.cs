@@ -17,7 +17,7 @@ public class QuestionDatabase : ScriptableObject
 
     public QuestionSet GetQuestionSet(int level)
     {
-        return GetJSONData();
+        return GetJSONData(3, 0);
         //foreach (QuestionSet questionSet in questionSets)
         //{
         //    if (questionSet.level == level)
@@ -28,9 +28,13 @@ public class QuestionDatabase : ScriptableObject
         //return new QuestionSet();
     }
 
-    public QuestionSet GetJSONData()
+    public QuestionSet GetJSONData(int questionAmount, int category)
     {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api.php?amount=3&type=multiple");
+        HttpWebRequest request = category > 0 == true ? 
+            (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&category={1}&type=multiple", questionAmount, category))
+            : (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&type=multiple", questionAmount));
+
+
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
 
