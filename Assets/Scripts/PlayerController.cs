@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -17,12 +16,10 @@ public class PlayerController : MonoBehaviour
     public bool dead;
     public Animator anim;
 
-    [Header("Attack")]
-    public int damage;
-
     [Header("SFX")]
     public AudioClip attackSound;
     public AudioClip hurtSound;
+    public AudioClip blockSound;
     private AudioSource source;
 
     // local player
@@ -32,25 +29,26 @@ public class PlayerController : MonoBehaviour
     public void Initialize()
     {
         playerInfo.Initialize(health, 0);
+        source = GetComponent<AudioSource>();
     }
     //private void Update() {
     //    playerInfo.Initialize(health, 0);
     //}
 
-//void Move()
-//{
-//    // get horizontal and vertical inputs
-//    float x = Input.GetAxis("Horizontal");
-//    float y = Input.GetAxis("Vertical");
+    //void Move()
+    //{
+    //    // get horizontal and vertical inputs
+    //    float x = Input.GetAxis("Horizontal");
+    //    float y = Input.GetAxis("Vertical");
 
-//    // apply that to our velocity
-//    rig.velocity = new Vector2(x, y) * moveSpeed;
+    //    // apply that to our velocity
+    //    rig.velocity = new Vector2(x, y) * moveSpeed;
 
-//    // applies correct moving animation
-//    photonView.RPC("MovingAnimation", RpcTarget.All, x, y);
-//}
+    //    // applies correct moving animation
+    //    photonView.RPC("MovingAnimation", RpcTarget.All, x, y);
+    //}
 
-void MovingAnimation(float x, float y)
+    void MovingAnimation(float x, float y)
     {
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Player_Attack"))
         {
@@ -84,6 +82,15 @@ void MovingAnimation(float x, float y)
 
     public void TakeDamage(int damage)
     {
+        if(character == Character.Knight)
+        {
+            System.Random random = new System.Random();
+            if (random.Next(1, 5) == 1)
+            {
+                source.PlayOneShot(blockSound);
+                damage = 0;
+            }
+        }
         health -= damage;
 
         // update the health bar
@@ -139,10 +146,10 @@ void MovingAnimation(float x, float y)
         playerInfo.SetHealth(health);
     }
 
-    void GainScore(int scoreToGive)
+    public void GainScore(int scoreToGive)
     {
         score += scoreToGive;
-
+        playerInfo.UpdateScore(score);
         // update the ui
         //GameUI.instance.UpdateGoldText(gold);
     }

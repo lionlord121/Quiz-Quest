@@ -11,9 +11,10 @@ using System.Web;
 [CreateAssetMenu(fileName = "Questions", menuName = "Create Questions", order = 100)]
 public class QuestionDatabase : ScriptableObject
 {
-    public string url = "https://opentdb.com/api.php?amount=3&type=multiple";
     public JSONNode jsonResult;
     public QuestionSet[] questionSets;
+    private Dictionary<string, int> questionCatagories = new Dictionary<string, int>();
+    private string token = "";
 
     public QuestionSet GetQuestionSet(int level)
     {
@@ -28,11 +29,38 @@ public class QuestionDatabase : ScriptableObject
         //return new QuestionSet();
     }
 
+    public void getAPISession()
+    {
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api_token.php?command=request");
+        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        StreamReader reader = new StreamReader(response.GetResponseStream());
+
+        string json = reader.ReadToEnd();
+
+        JSONNode data = JSON.Parse(json);
+
+    }
+
+    public void setCatagories()
+    {
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api_category.php");
+        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        StreamReader reader = new StreamReader(response.GetResponseStream());
+
+        string json = reader.ReadToEnd();
+
+        JSONNode data = JSON.Parse(json);
+        foreach (var catagory in data["trivia_categories"])
+        {
+            questionCatagories.Add(catagory.Value["name"], catagory.Value["id"]);
+        }
+    }
+
     public QuestionSet GetJSONData(int questionAmount, int category)
     {
         HttpWebRequest request = category > 0 == true ? 
-            (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&category={1}&type=multiple", questionAmount, category))
-            : (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&type=multiple", questionAmount));
+            (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&category={1}&type=multiple&token={2}", questionAmount, category, ""))
+            : (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&type=multiple&token={1}", questionAmount, ""));
 
 
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();

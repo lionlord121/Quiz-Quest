@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
@@ -13,12 +14,16 @@ public class Game : MonoBehaviour
     private Transform questionPanel;
     [SerializeField]
     private Transform answerPanel;
+    [SerializeField]
+    private Image timerBar;
+    private float timeLeft = 10.0f;
+    private float maxTimer = 10.0f;
 
     [SerializeField]
-    private Transform scoreScreen, questionScreen;
+    private Transform scoreScreen, questionScreen, victoryScreen;
     [SerializeField]
     private AudioClip correctSound, incorrectSound;
-    private AudioSource source;
+    private AudioSource backgroundSource, soundSource;
     [SerializeField]
     private TMPro.TextMeshProUGUI scoreStats, scorePercentage;
 
@@ -26,16 +31,33 @@ public class Game : MonoBehaviour
     public PlayerController players;
     public int playerCount = 1;
 
+    private int correctAnswers = 0;
+    private int totalQuestions = 1;
 
-    private int correctAnswers;
     // Start is called before the first frame update
     void Start()
     {
-        source = GetComponent<AudioSource>();
+        backgroundSource = GetComponent<AudioSource>();
+        soundSource = GetComponent<AudioSource>();
         level = PlayerPrefs.GetInt("level", 0);
         SpawnPlayer();
+        questionDatabase.setCatagories();
         LoadQuestionSet();
         UseQuestionTemplate(currentQuestion.questionType);
+    }
+
+    private void Update()
+    {
+        if (!players.dead)
+        {
+            timeLeft -= Time.deltaTime;
+            timerBar.fillAmount = (float)timeLeft / maxTimer;
+            if (timeLeft < 0)
+            {
+                //Do something useful or Load a new game scene depending on your use-case
+                CheckAnswer("");
+            }
+        }
     }
 
     void SpawnPlayer()
@@ -105,6 +127,8 @@ public class Game : MonoBehaviour
 
     void NextQuestion()
     {
+        totalQuestions++;
+        timeLeft = maxTimer;
         if (currentQuestionIndex < currentQuestionSet.questions.Count-1)
         {
             currentQuestionIndex++;
@@ -120,16 +144,25 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void ChangeVolume()
+    {
+        backgroundSource.volume = 1f;
+    }
+
     public void CheckAnswer(string answer)
     {
+        backgroundSource.volume = 0.25f;
+        Invoke("ChangeVolume", 2);
         if (answer == currentQuestion.correctAnswerKey)
         {
             correctAnswers++;
-            source.PlayOneShot(correctSound);
+            soundSource.PlayOneShot(correctSound);
+
+            players.GainScore(1 + (int)timeLeft);
             Debug.Log("Correct");
         } else
         {
-            source.PlayOneShot(incorrectSound);
+            soundSource.PlayOneShot(incorrectSound);
             players.TakeDamage(1);
         }
 
@@ -138,8 +171,9 @@ public class Game : MonoBehaviour
             // do score screen
             scoreScreen.gameObject.SetActive(true);
             questionScreen.gameObject.SetActive(false);
-            scorePercentage.text = string.Format("Score: {0}%", (float)correctAnswers / (float)currentQuestionSet.questions.Count * 100);
-            scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", currentQuestionSet.questions.Count, correctAnswers);
+            scorePercentage.text = string.Format("Score: {0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
+            scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", totalQuestions, correctAnswers);
+            backgroundSource.Stop();
         } else
         {
             ClearAnswers();

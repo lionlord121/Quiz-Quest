@@ -11,7 +11,9 @@ public class PlayerInfo : MonoBehaviour
     public Image healthIcon;
     public Image[] healthIcons;
 
-    public int score;
+    private int score;
+    [SerializeField]
+    private TMPro.TextMeshProUGUI scoreDisplay;
 
     public void Initialize(int healthVal, int scoreVal)
     {
@@ -45,8 +47,9 @@ public class PlayerInfo : MonoBehaviour
         }
     }
 
-    void UpdateScore(int value)
+    public void UpdateScore(int value)
     {
         score += value;
+        scoreDisplay.text = string.Format("Score: {0}", score);
     }
 }
