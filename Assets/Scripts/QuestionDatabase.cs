@@ -39,6 +39,7 @@ public class QuestionDatabase : ScriptableObject
 
         JSONNode data = JSON.Parse(json);
 
+        token = data["token"].Value;
     }
 
     public void setCatagories()
@@ -59,8 +60,8 @@ public class QuestionDatabase : ScriptableObject
     public QuestionSet GetJSONData(int questionAmount, int category)
     {
         HttpWebRequest request = category > 0 == true ? 
-            (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&category={1}&type=multiple&token={2}", questionAmount, category, ""))
-            : (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&type=multiple&token={1}", questionAmount, ""));
+            (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&category={1}&type=multiple&token={2}", questionAmount, category, token))
+            : (HttpWebRequest)WebRequest.Create(string.Format("https://opentdb.com/api.php?amount={0}&type=multiple&token={1}", questionAmount, token));
 
 
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();

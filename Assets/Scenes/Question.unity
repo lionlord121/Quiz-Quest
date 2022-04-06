@@ -1504,7 +1504,8 @@ MonoBehaviour:
   questionDatabase: {fileID: 11400000, guid: f3e4535c99793b6459ba2d3d40e8d828, type: 2}
   questionPanel: {fileID: 1704723531}
   answerPanel: {fileID: 1313823413}
-  timerBar: {fileID: 1619808144}
+  timerBar: {fileID: 1522511142}
+  timerBarCurrent: {fileID: 1619808144}
   scoreScreen: {fileID: 709509850}
   questionScreen: {fileID: 2088944339}
   victoryScreen: {fileID: 2074315526}

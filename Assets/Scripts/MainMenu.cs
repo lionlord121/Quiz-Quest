@@ -17,4 +17,9 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Question");
     }
 
+    public void ToggleTimer(bool val)
+    {
+       GamePrefs.timerOn = val;
+    }
+
 }

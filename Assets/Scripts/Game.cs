@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Game : MonoBehaviour
 {
     public QuestionDatabase questionDatabase;
+
     private int level;
     private QuestionSet currentQuestionSet;
     private Question currentQuestion;
@@ -15,7 +16,9 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Transform answerPanel;
     [SerializeField]
-    private Image timerBar;
+    private GameObject timerBar;
+    [SerializeField]
+    private Image timerBarCurrent;
     private float timeLeft = 10.0f;
     private float maxTimer = 10.0f;
 
@@ -40,21 +43,31 @@ public class Game : MonoBehaviour
         backgroundSource = GetComponent<AudioSource>();
         soundSource = GetComponent<AudioSource>();
         level = PlayerPrefs.GetInt("level", 0);
+        SetGamePrefs();
         SpawnPlayer();
+        questionDatabase.getAPISession();
         questionDatabase.setCatagories();
         LoadQuestionSet();
         UseQuestionTemplate(currentQuestion.questionType);
     }
 
+    private void SetGamePrefs()
+    {
+        if (!GamePrefs.timerOn)
+        {
+            timerBar.SetActive(false);
+        }
+    }
+
     private void Update()
     {
-        if (!players.dead)
+        if (!players.dead && timerBar.activeSelf)
         {
             timeLeft -= Time.deltaTime;
-            timerBar.fillAmount = (float)timeLeft / maxTimer;
+            timerBarCurrent.fillAmount = (float)timeLeft / maxTimer;
             if (timeLeft < 0)
             {
-                //Do something useful or Load a new game scene depending on your use-case
+                // Send a blank answer
                 CheckAnswer("");
             }
         }
