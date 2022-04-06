@@ -148,9 +148,7 @@ public class PlayerController : MonoBehaviour
 
     public void GainScore(int scoreToGive)
     {
-        score += scoreToGive;
-        playerInfo.UpdateScore(score);
         // update the ui
-        //GameUI.instance.UpdateGoldText(gold);
+        playerInfo.UpdateScore(scoreToGive);
     }
 }
