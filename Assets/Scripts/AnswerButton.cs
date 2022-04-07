@@ -17,4 +17,9 @@ public class AnswerButton : MonoBehaviour
         this.answer = answer;
         transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = answer;
     }
+
+    public string GetAnswer()
+    {
+        return this.answer;
+    }
 }

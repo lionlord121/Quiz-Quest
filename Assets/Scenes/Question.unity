@@ -410,7 +410,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8214599993252188329, guid: f522af33b05fbb64e8c5819a11b64f78,
+  m_Sprite: {fileID: 8214599993252188329, guid: fada8e8fd596b9b4aa7f05cb9a38559c,
     type: 3}
   m_Type: 0
   m_PreserveAspect: 0
@@ -1666,6 +1666,10 @@ MonoBehaviour:
   questionDatabase: {fileID: 11400000, guid: f3e4535c99793b6459ba2d3d40e8d828, type: 2}
   questionPanel: {fileID: 1704723531}
   answerPanel: {fileID: 1313823413}
+  incorrectAnswerSprite: {fileID: 8214599993252188329, guid: fada8e8fd596b9b4aa7f05cb9a38559c,
+    type: 3}
+  correctAnswerSprite: {fileID: -8191739510646017925, guid: 305e59706a4de8b48acf969ba82d7d16,
+    type: 3}
   timerBar: {fileID: 1522511142}
   timerBarCurrent: {fileID: 1619808144}
   scoreScreen: {fileID: 709509850}

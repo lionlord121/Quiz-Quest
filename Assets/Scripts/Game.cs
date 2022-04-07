@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class Game : MonoBehaviour
 {
@@ -16,11 +17,14 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Transform answerPanel;
     [SerializeField]
+    private Sprite incorrectAnswerSprite, correctAnswerSprite;
+    [SerializeField]
     private GameObject timerBar;
     [SerializeField]
     private Image timerBarCurrent;
     private float timeLeft = 10.0f;
     private float maxTimer = 10.0f;
+    private bool timerActive = true;
 
     [SerializeField]
     private Transform scoreScreen, questionScreen, victoryScreen;
@@ -61,7 +65,7 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
-        if (!players.dead && timerBar.activeSelf)
+        if (!players.dead && timerBar.activeSelf && timerActive)
         {
             timeLeft -= Time.deltaTime;
             timerBarCurrent.fillAmount = (float)timeLeft / maxTimer;
@@ -161,24 +165,10 @@ public class Game : MonoBehaviour
     {
         backgroundSource.volume = 1f;
     }
-
-    public void CheckAnswer(string answer)
+    private IEnumerator waitForAnimation()
     {
-        backgroundSource.volume = 0.25f;
-        Invoke("ChangeVolume", 2);
-        if (answer == currentQuestion.correctAnswerKey)
-        {
-            correctAnswers++;
-            soundSource.PlayOneShot(correctSound);
-
-            players.GainScore(1 + (int)timeLeft);
-            Debug.Log("Correct");
-        } else
-        {
-            soundSource.PlayOneShot(incorrectSound);
-            players.TakeDamage(1);
-        }
-
+        yield return new WaitForSeconds(3);
+        ToggleTimer();
         if (players.dead)
         {
             // do score screen
@@ -187,10 +177,55 @@ public class Game : MonoBehaviour
             scorePercentage.text = string.Format("Score: {0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
             scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", totalQuestions, correctAnswers);
             backgroundSource.Stop();
-        } else
+        }
+        else
         {
             ClearAnswers();
             NextQuestion();
         }
+    }
+
+
+    public void CheckAnswer(string answer)
+    {
+        backgroundSource.volume = 0.25f;
+        Invoke("ChangeVolume", 2);
+        HighlightCorrectAnswer(currentQuestion.correctAnswerKey);
+        if (answer == currentQuestion.correctAnswerKey)
+        {
+            correctAnswers++;
+            soundSource.PlayOneShot(correctSound);
+            players.GainScore(1 + (int)timeLeft);
+        } else
+        {
+            if (answer != "")
+            {
+                HighlightIncorrectAnswer(answer);
+            }
+            soundSource.PlayOneShot(incorrectSound);
+            players.TakeDamage(1);
+        }
+
+        StartCoroutine("waitForAnimation");
+        ToggleTimer();
+    }
+
+    public void ToggleTimer()
+    {
+        timerActive = !timerActive;
+    }
+
+    public void HighlightCorrectAnswer(string answer)
+    {
+        // get the button with the correct answer
+        AnswerButton correctAnswerBtn = FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() == answer).ToArray()[0];
+        correctAnswerBtn.GetComponent<Image>().sprite = correctAnswerSprite;
+    }
+
+    public void HighlightIncorrectAnswer(string answer)
+    {
+        // get the button with the incorrect answer
+        AnswerButton incorrectAnswerBtn = FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() == answer).ToArray()[0];
+        incorrectAnswerBtn.GetComponent<Image>().sprite = incorrectAnswerSprite;
     }
 }
