@@ -148,6 +148,8 @@ public class PlayerController : MonoBehaviour
 
     public void GainScore(int scoreToGive)
     {
+        // update the current score
+        score += scoreToGive;
         // update the ui
         playerInfo.UpdateScore(scoreToGive);
     }

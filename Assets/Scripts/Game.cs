@@ -29,10 +29,10 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Transform scoreScreen, questionScreen, victoryScreen;
     [SerializeField]
-    private AudioClip correctSound, incorrectSound;
+    private AudioClip correctSound, incorrectSound, defeatMusic;
     private AudioSource backgroundSource, soundSource;
     [SerializeField]
-    private TMPro.TextMeshProUGUI scoreStats, scorePercentage;
+    private TMPro.TextMeshProUGUI scoreStats, scorePercentage, scoreFinal;
 
     [Header("Players")]
     public PlayerController players;
@@ -174,9 +174,10 @@ public class Game : MonoBehaviour
             // do score screen
             scoreScreen.gameObject.SetActive(true);
             questionScreen.gameObject.SetActive(false);
-            scorePercentage.text = string.Format("Score: {0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
+            scorePercentage.text = string.Format("Percent Correct: \n{0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
             scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", totalQuestions, correctAnswers);
-            backgroundSource.Stop();
+            scoreFinal.text = string.Format("Final Score: \n {0}", players.score);
+            PlayDefeatedMusic();
         }
         else
         {
@@ -188,6 +189,7 @@ public class Game : MonoBehaviour
 
     public void CheckAnswer(string answer)
     {
+        TogglePlayerInput();
         backgroundSource.volume = 0.25f;
         Invoke("ChangeVolume", 2);
         HighlightCorrectAnswer(currentQuestion.correctAnswerKey);
@@ -215,9 +217,26 @@ public class Game : MonoBehaviour
         timerActive = !timerActive;
     }
 
+    public void TogglePlayerInput() 
+    {
+        FindObjectsOfType<Button>().ToList().ForEach(x => x.interactable = false);
+    }
+
+    public void PlayDefeatedMusic()
+    {
+        backgroundSource.Stop();
+        backgroundSource.loop = true;
+        backgroundSource.PlayOneShot(defeatMusic);
+    }
+
     public void HighlightCorrectAnswer(string answer)
     {
         // get the button with the correct answer
+        if(FindObjectsOfType<AnswerButton>().ToArray().Length == 0)
+        {
+            Debug.Log("uh oh");
+        }
+
         AnswerButton correctAnswerBtn = FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() == answer).ToArray()[0];
         correctAnswerBtn.GetComponent<Image>().sprite = correctAnswerSprite;
     }
