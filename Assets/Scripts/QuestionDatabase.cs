@@ -13,7 +13,7 @@ public class QuestionDatabase : ScriptableObject
 {
     public JSONNode jsonResult;
     public QuestionSet[] questionSets;
-    private Dictionary<string, int> questionCatagories = new Dictionary<string, int>();
+    public Dictionary<string, int> questionCatagories = new Dictionary<string, int>();
     private string token = "";
 
     public QuestionSet GetQuestionSet(int level)
@@ -105,7 +105,7 @@ public class QuestionDatabase : ScriptableObject
             HttpUtility.HtmlDecode(result.incorrect_answers[1]),
             HttpUtility.HtmlDecode(result.incorrect_answers[2]) };
 
-        question.correctAnswerKey = result.correct_answer;
+        question.correctAnswerKey = HttpUtility.HtmlDecode(result.correct_answer);
         return question;
     }
 }

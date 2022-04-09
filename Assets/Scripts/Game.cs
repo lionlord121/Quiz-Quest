@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System;
 
 public class Game : MonoBehaviour
 {
@@ -50,7 +51,10 @@ public class Game : MonoBehaviour
         SetGamePrefs();
         SpawnPlayer();
         questionDatabase.getAPISession();
-        questionDatabase.setCatagories();
+        if (questionDatabase.questionCatagories.Count == 0)
+        {
+            questionDatabase.setCatagories();
+        }
         LoadQuestionSet();
         UseQuestionTemplate(currentQuestion.questionType);
     }
@@ -232,13 +236,15 @@ public class Game : MonoBehaviour
     public void HighlightCorrectAnswer(string answer)
     {
         // get the button with the correct answer
-        if(FindObjectsOfType<AnswerButton>().ToArray().Length == 0)
+        try {
+            AnswerButton correctAnswerBtn = FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() == answer).ToArray()[0];
+            correctAnswerBtn.GetComponent<Image>().sprite = correctAnswerSprite;
+        } 
+        catch (Exception e)
         {
             Debug.Log("uh oh");
         }
 
-        AnswerButton correctAnswerBtn = FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() == answer).ToArray()[0];
-        correctAnswerBtn.GetComponent<Image>().sprite = correctAnswerSprite;
     }
 
     public void HighlightIncorrectAnswer(string answer)
