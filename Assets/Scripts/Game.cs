@@ -38,6 +38,8 @@ public class Game : MonoBehaviour
     [Header("Players")]
     public PlayerController players;
     public int playerCount = 1;
+    [Header("Enemy")]
+    public EnemyController enemy;
 
     private int correctAnswers = 0;
     private int totalQuestions = 1;
@@ -50,6 +52,7 @@ public class Game : MonoBehaviour
         level = PlayerPrefs.GetInt("level", 0);
         SetGamePrefs();
         SpawnPlayer();
+        SpawnEnemy();
         questionDatabase.getAPISession();
         if (questionDatabase.questionCatagories.Count == 0)
         {
@@ -91,6 +94,11 @@ public class Game : MonoBehaviour
 
         //playerCount
         players.Initialize();
+    }
+
+    void SpawnEnemy()
+    {
+        enemy.Initialize();
     }
 
     void LoadQuestionSet()
@@ -202,7 +210,9 @@ public class Game : MonoBehaviour
             correctAnswers++;
             soundSource.PlayOneShot(correctSound);
             players.GainScore(1 + (int)timeLeft);
-        } else
+            enemy.TakeDamage(1);
+        }
+        else
         {
             if (answer != "")
             {
