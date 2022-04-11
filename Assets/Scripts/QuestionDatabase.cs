@@ -31,15 +31,18 @@ public class QuestionDatabase : ScriptableObject
 
     public void getAPISession()
     {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api_token.php?command=request");
-        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        StreamReader reader = new StreamReader(response.GetResponseStream());
+        if(token == "")
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api_token.php?command=request");
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            StreamReader reader = new StreamReader(response.GetResponseStream());
 
-        string json = reader.ReadToEnd();
+            string json = reader.ReadToEnd();
 
-        JSONNode data = JSON.Parse(json);
+            JSONNode data = JSON.Parse(json);
 
-        token = data["token"].Value;
+            token = data["token"].Value;
+        }
     }
 
     public void setCatagories()

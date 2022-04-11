@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,10 +9,11 @@ public class PlayerController : MonoBehaviour
     [Header("Info")]
     public int numCorrect = 0;
     public PlayerInfo playerInfo;
-    public int health = 5;
+    public int health = 6;
     public int maxHealth = 6;
     public int score;
     public Character character = Character.Knight;
+    public Image characterSprite;
     public bool dead;
     public Animator anim;
 
@@ -100,20 +101,20 @@ public class PlayerController : MonoBehaviour
             Die();
         else
         {
-            getsHurt();
+            GetsHurt();
         }
     }
 
-    void getsHurt()
+    void GetsHurt()
     {
-        //StartCoroutine(DamageFlash());
+        StartCoroutine(DamageFlash());
 
-        //IEnumerator DamageFlash()
-        //{
-        //sr.color = Color.red;
-        //yield return new WaitForSeconds(0.05f);
-        //sr.color = Color.white;
-        //}
+        IEnumerator DamageFlash()
+        {
+            characterSprite.color = Color.red;
+            yield return new WaitForSeconds(0.05f);
+            characterSprite.color = Color.white;
+        }
     }
 
     void Die()
@@ -152,5 +153,7 @@ public class PlayerController : MonoBehaviour
         score += scoreToGive;
         // update the ui
         playerInfo.UpdateScore(scoreToGive);
+        // heal when at this score
+        //Heal(1);
     }
 }

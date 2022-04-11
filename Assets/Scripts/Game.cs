@@ -98,7 +98,9 @@ public class Game : MonoBehaviour
 
     void SpawnEnemy()
     {
-        enemy.Initialize();
+        System.Random rnd = new System.Random();
+        int enemyId = rnd.Next(0, Enum.GetValues(typeof(EnemyController.Enemy)).Length);
+        enemy.Initialize(enemyId);
     }
 
     void LoadQuestionSet()
@@ -211,6 +213,13 @@ public class Game : MonoBehaviour
             soundSource.PlayOneShot(correctSound);
             players.GainScore(1 + (int)timeLeft);
             enemy.TakeDamage(1);
+            if (enemy.dead)
+            {
+                // start death animation for enemy
+
+                // for now make a new enemy
+                SpawnEnemy();
+            }
         }
         else
         {

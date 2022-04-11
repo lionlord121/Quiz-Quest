@@ -1061,6 +1061,16 @@ PrefabInstance:
       propertyPath: blockSound
       value: 
       objectReference: {fileID: 8300000, guid: fd0df36190cedc54a8b41ccd12c5ebfe, type: 3}
+    - target: {fileID: 3717645812876956400, guid: 1050099925982b646aaadb127c2b56c3,
+        type: 3}
+      propertyPath: characterSprite
+      value: 
+      objectReference: {fileID: 435493874}
+    - target: {fileID: 3717645812876956400, guid: 1050099925982b646aaadb127c2b56c3,
+        type: 3}
+      propertyPath: health
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4176160119467652045, guid: 1050099925982b646aaadb127c2b56c3,
         type: 3}
       propertyPath: m_ChildControlHeight
@@ -1199,6 +1209,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1138233315}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &435493874 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1068900579113511500, guid: 1050099925982b646aaadb127c2b56c3,
+    type: 3}
+  m_PrefabInstance: {fileID: 372479816}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &444330975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2468,6 +2490,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd98eb7f3ab6d5840999db8478fb5dab, type: 3}
+--- !u!224 &1214164835 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1005906517530740645, guid: a57934d101ff82344a002d7bcd31057e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1005906517065202121}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1313823412
 GameObject:
   m_ObjectHideFlags: 0
@@ -2869,6 +2897,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98c6d658f36545340a727a934ff49f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1619056237
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1619056238}
+  - component: {fileID: 1619056240}
+  - component: {fileID: 1619056239}
+  m_Layer: 5
+  m_Name: HealthPoint (7)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1619056238
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619056237}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1214164835}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1619056239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619056237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: fcdba982ede213948bbbeea234681931, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1619056240
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619056237}
+  m_CullTransparentMesh: 0
 --- !u!1 &1619808143
 GameObject:
   m_ObjectHideFlags: 0
@@ -3182,6 +3284,80 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 526481309}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1694031024
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1694031025}
+  - component: {fileID: 1694031027}
+  - component: {fileID: 1694031026}
+  m_Layer: 5
+  m_Name: HealthPoint (6)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1694031025
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694031024}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1214164835}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1694031026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694031024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: fcdba982ede213948bbbeea234681931, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1694031027
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694031024}
+  m_CullTransparentMesh: 0
 --- !u!1 &1697945919
 GameObject:
   m_ObjectHideFlags: 0
@@ -3666,6 +3842,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1997976932}
   m_CullTransparentMesh: 0
+--- !u!114 &2008017441 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1005906516950622606, guid: a57934d101ff82344a002d7bcd31057e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1005906517065202121}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2039829108
 GameObject:
   m_ObjectHideFlags: 0
@@ -4147,6 +4335,172 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2088944339}
     m_Modifications:
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: enemyIcon
+      value: 
+      objectReference: {fileID: 2008017441}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteTyrant
+      value: 
+      objectReference: {fileID: 21300000, guid: 9ea66269bb6122d4596b118aed192565,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteSlime
+      value: 
+      objectReference: {fileID: 21300000, guid: dfd5cb501237c0544950de019c69f60c,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: enemy
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteSkelWar
+      value: 
+      objectReference: {fileID: 21300000, guid: a7fbeedaf3ffc7143b545d930bead577,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteAssassin
+      value: 
+      objectReference: {fileID: 21300000, guid: 6ed91dce29a17d947a586b9946fcade5,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteCultist
+      value: 
+      objectReference: {fileID: 21300000, guid: 3119747fa4d9a04488d0d003640d2f82,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteDarkreaper
+      value: 
+      objectReference: {fileID: 21300000, guid: 02da0250aeadfc34b8f429c74af5fba3,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteDrow
+      value: 
+      objectReference: {fileID: 21300000, guid: e9f718b51bb0db3439f42e46669037b2,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteFrogman
+      value: 
+      objectReference: {fileID: 21300000, guid: 360024c87d4e9b84bb3c8db9ebd45227,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteGhost
+      value: 
+      objectReference: {fileID: 21300000, guid: ae21176551898de45b938adbe0811689,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteGnoll
+      value: 
+      objectReference: {fileID: 21300000, guid: aa30dd48f932b5146b8aa614243f1b9e,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteGiantSpider
+      value: 
+      objectReference: {fileID: 21300000, guid: dd9cc1aef13f31047b183df05bdc78df,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteGoblin
+      value: 
+      objectReference: {fileID: 21300000, guid: 753ab26ebd1a87745acd851c7b860d84,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteGuard
+      value: 
+      objectReference: {fileID: 21300000, guid: dd968abcd4fabd743b100c3f340ffa11,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteHobgoblin
+      value: 
+      objectReference: {fileID: 21300000, guid: 8fdf2037b9fcd734d856141d5c5c52bf,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteIcegolem
+      value: 
+      objectReference: {fileID: 21300000, guid: dd968abcd4fabd743b100c3f340ffa11,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteImp
+      value: 
+      objectReference: {fileID: 21300000, guid: 8b6fd6598e1275d469b89db33a40fce1,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteLizardman
+      value: 
+      objectReference: {fileID: 21300000, guid: 14cb19877d802a54c8d18aa5786c679e,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteMagmagolem
+      value: 
+      objectReference: {fileID: 21300000, guid: 9505890e79ffce043867ae7756cdfe63,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteOgre
+      value: 
+      objectReference: {fileID: 21300000, guid: 9ba9125a30171dd4aa3449114b65efde,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteRuffian
+      value: 
+      objectReference: {fileID: 21300000, guid: e2007ee01c8b0784a9914d6cdedf88df,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteScout
+      value: 
+      objectReference: {fileID: 21300000, guid: 76a6c0b074b13324685c59a2ca1ba3ce,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteStonegolem
+      value: 
+      objectReference: {fileID: 21300000, guid: 425b9e888f48e664eaf3b7777b072095,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteSwashbuckler
+      value: 
+      objectReference: {fileID: 21300000, guid: ef6b8b7a660801343a5482487bb9c4e7,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteTroll
+      value: 
+      objectReference: {fileID: 21300000, guid: 5fc16e17e7cabe447ae329b56f8a4217,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteWererat
+      value: 
+      objectReference: {fileID: 21300000, guid: 6a4b7e899e27ddb429b7934c90a88b1f,
+        type: 3}
+    - target: {fileID: 1005906515695514696, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: spriteZombie
+      value: 
+      objectReference: {fileID: 21300000, guid: 06581686b65a84c4a9aa863bd55a270c,
+        type: 3}
     - target: {fileID: 1005906515695514804, guid: a57934d101ff82344a002d7bcd31057e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4377,6 +4731,21 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1005906517530740644, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: healthIcons.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1005906517530740644, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: healthIcons.Array.data[6]
+      value: 
+      objectReference: {fileID: 1694031026}
+    - target: {fileID: 1005906517530740644, guid: a57934d101ff82344a002d7bcd31057e,
+        type: 3}
+      propertyPath: healthIcons.Array.data[7]
+      value: 
+      objectReference: {fileID: 1619056239}
     - target: {fileID: 1005906517550911276, guid: a57934d101ff82344a002d7bcd31057e,
         type: 3}
       propertyPath: m_AnchorMin.y
