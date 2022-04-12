@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public enum Character { Knight = 0, Wizard = 1, Cleric = 2 , Assassin = 3 };
+    public enum Character { Knight = 0, Mage = 1, Cleric = 2 , Assassin = 3 };
 
     [Header("Info")]
     public int numCorrect = 0;
@@ -17,20 +17,53 @@ public class PlayerController : MonoBehaviour
     public bool dead;
     public Animator anim;
 
+    [Header("Character Sprites")]
+    public Sprite knightSprite;
+    public Sprite mageSprite;
+    public Sprite clericSprite;
+    public Sprite assassinSprite;
+
+
     [Header("SFX")]
     public AudioClip attackSound;
     public AudioClip hurtSound;
     public AudioClip blockSound;
+    public AudioClip mageAbility;
+
     private AudioSource source;
 
     // local player
     public static PlayerController me;
 
 
-    public void Initialize()
+    public void Initialize(Character character, int currentHp)
     {
+        GetCharacterSelection(character);
         playerInfo.Initialize(health, 0);
         source = GetComponent<AudioSource>();
+
+    }
+
+    private void GetCharacterSelection(Character character)
+    {
+        switch (character)
+        {
+            case Character.Knight:
+                characterSprite.sprite = knightSprite;
+                break;
+            case Character.Mage:
+                characterSprite.sprite = mageSprite;
+                break;
+            case Character.Cleric:
+                characterSprite.sprite = clericSprite;
+                break;
+            case Character.Assassin:
+                characterSprite.sprite = assassinSprite;
+                break;
+            default:
+                characterSprite.sprite = knightSprite;
+                break;
+        }
     }
     //private void Update() {
     //    playerInfo.Initialize(health, 0);
@@ -79,6 +112,11 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetTrigger("attacking");
         source.PlayOneShot(attackSound);
+    }
+
+    public void PlayMageAbilitySound()
+    {
+        source.PlayOneShot(mageAbility);
     }
 
     public void TakeDamage(int damage)

@@ -7,6 +7,7 @@ using System.Collections;
 using System.Net;
 using System.IO;
 using System.Web;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "Questions", menuName = "Create Questions", order = 100)]
 public class QuestionDatabase : ScriptableObject
@@ -16,9 +17,9 @@ public class QuestionDatabase : ScriptableObject
     public Dictionary<string, int> questionCatagories = new Dictionary<string, int>();
     private string token = "";
 
-    public QuestionSet GetQuestionSet(int level)
+    public QuestionSet GetQuestionSet(int level, int questionCount, string catagoryName)
     {
-        return GetJSONData(3, 0);
+        return GetJSONData(questionCount, GetIdFromCatagoryName(catagoryName));
         //foreach (QuestionSet questionSet in questionSets)
         //{
         //    if (questionSet.level == level)
@@ -29,7 +30,7 @@ public class QuestionDatabase : ScriptableObject
         //return new QuestionSet();
     }
 
-    public void getAPISession()
+    public void GetAPISession()
     {
         if(token == "")
         {
@@ -45,7 +46,7 @@ public class QuestionDatabase : ScriptableObject
         }
     }
 
-    public void setCatagories()
+    public void SetCatagories()
     {
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://opentdb.com/api_category.php");
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -57,6 +58,22 @@ public class QuestionDatabase : ScriptableObject
         foreach (var catagory in data["trivia_categories"])
         {
             questionCatagories.Add(catagory.Value["name"], catagory.Value["id"]);
+        }
+    }
+
+    public string GetCatagoryNameFromId(int id)
+    {
+        return questionCatagories.FirstOrDefault(x => x.Value == id).Key;
+    }
+
+    public int GetIdFromCatagoryName(string catagoryName)
+    {
+        if (catagoryName != "")
+        {
+            return questionCatagories[catagoryName];
+        } else
+        {
+            return 0;
         }
     }
 

@@ -23,8 +23,8 @@ public class Game : MonoBehaviour
     private GameObject timerBar;
     [SerializeField]
     private Image timerBarCurrent;
-    private float timeLeft = 10.0f;
-    private float maxTimer = 10.0f;
+    private float timeLeft = 15.0f;
+    private float maxTimer = 15.0f;
     private bool timerActive = true;
 
     [SerializeField]
@@ -37,6 +37,8 @@ public class Game : MonoBehaviour
 
     [Header("Players")]
     public PlayerController players;
+    //public PlayerController[] players;
+
     public int playerCount = 1;
     [Header("Enemy")]
     public EnemyController enemy;
@@ -53,12 +55,29 @@ public class Game : MonoBehaviour
         SetGamePrefs();
         SpawnPlayer();
         SpawnEnemy();
-        questionDatabase.getAPISession();
+        questionDatabase.GetAPISession();
         if (questionDatabase.questionCatagories.Count == 0)
         {
-            questionDatabase.setCatagories();
+            questionDatabase.SetCatagories();
         }
-        LoadQuestionSet();
+        if (players.character == PlayerController.Character.Mage)
+        {
+            System.Random random = new System.Random();
+            if (random.Next(1, 4) == 1)
+            {
+                players.PlayMageAbilitySound();
+                // make it animals for now need UI first
+                LoadQuestionSet(enemy.health, "Animals");
+            }
+            else
+            {
+                LoadQuestionSet(enemy.health, "");
+            }
+        } else
+        {
+            LoadQuestionSet(enemy.health, "");
+        }
+
         UseQuestionTemplate(currentQuestion.questionType);
     }
 
@@ -93,7 +112,8 @@ public class Game : MonoBehaviour
         //playerObject.GetComponent<PhotonView>().RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
 
         //playerCount
-        players.Initialize();
+        //players.Initialize(PlayerController.Character.Knight, 0);
+        players.Initialize(players.character, 0);
     }
 
     void SpawnEnemy()
@@ -103,9 +123,9 @@ public class Game : MonoBehaviour
         enemy.Initialize(enemyId);
     }
 
-    void LoadQuestionSet()
+    void LoadQuestionSet(int questionCount, string catagoryName)
     {
-        currentQuestionSet = questionDatabase.GetQuestionSet(level);
+        currentQuestionSet = questionDatabase.GetQuestionSet(level, questionCount, catagoryName);
         currentQuestion = currentQuestionSet.questions[0];
     }
 
@@ -168,7 +188,7 @@ public class Game : MonoBehaviour
         }
         else
         {
-            LoadQuestionSet();
+            LoadQuestionSet(enemy.health, "");
             currentQuestionIndex = 0;
             currentQuestion = currentQuestionSet.questions[currentQuestionIndex];
             UseQuestionTemplate(currentQuestion.questionType);
