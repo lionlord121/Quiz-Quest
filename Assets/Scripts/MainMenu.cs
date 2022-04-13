@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    public Toggle timerToggle;
+
+    void Start()
+    {
+        timerToggle.isOn = GamePrefs.timerOn;
+    }
+
     public void ContinueGame()
     {
         SceneManager.LoadScene("Question");
@@ -14,7 +21,7 @@ public class MainMenu : MonoBehaviour
     public void NewGame()
     {
         PlayerPrefs.SetInt("level", 0);
-        SceneManager.LoadScene("Question");
+        SceneManager.LoadScene("Character Select");
     }
 
     public void ToggleTimer(bool val)

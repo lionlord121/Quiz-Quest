@@ -41,11 +41,11 @@ public class PlayerController : MonoBehaviour
         GetCharacterSelection(character);
         playerInfo.Initialize(health, 0);
         source = GetComponent<AudioSource>();
-
     }
 
     private void GetCharacterSelection(Character character)
     {
+        this.character = character;
         switch (character)
         {
             case Character.Knight:

@@ -13,38 +13,49 @@ public class Game : MonoBehaviour
     private QuestionSet currentQuestionSet;
     private Question currentQuestion;
     private int currentQuestionIndex;
+    private string currentCatagory ="";
+
+    private float timeLeft = 15.0f;
+    private float maxTimer = 15.0f;
+    private bool timerActive = true;
+
+    [Header("UI elements")]
+    [SerializeField]
+    private Image timerBarCurrent;
+    [SerializeField]
+    private Sprite incorrectAnswerSprite, correctAnswerSprite;
     [SerializeField]
     private Transform questionPanel;
     [SerializeField]
     private Transform answerPanel;
     [SerializeField]
-    private Sprite incorrectAnswerSprite, correctAnswerSprite;
-    [SerializeField]
     private GameObject timerBar;
     [SerializeField]
-    private Image timerBarCurrent;
-    private float timeLeft = 15.0f;
-    private float maxTimer = 15.0f;
-    private bool timerActive = true;
-
-    [SerializeField]
-    private Transform scoreScreen, questionScreen, victoryScreen;
-    [SerializeField]
-    private AudioClip correctSound, incorrectSound, defeatMusic;
-    private AudioSource backgroundSource, soundSource;
+    private Transform defeatScreen, questionScreen, victoryScreen, catagorySelectScreen;
     [SerializeField]
     private TMPro.TextMeshProUGUI scoreStats, scorePercentage, scoreFinal;
+    [SerializeField]
+    private TMPro.TMP_Dropdown catagoryDropdown;
+
+    [Header("Audio")]
+    [SerializeField]
+    private AudioClip correctSound;
+    [SerializeField]
+    private AudioClip incorrectSound;
+    [SerializeField]
+    private AudioClip defeatMusic;
+    private AudioSource backgroundSource, soundSource;
+
 
     [Header("Players")]
     public PlayerController players;
     //public PlayerController[] players;
-
     public int playerCount = 1;
-    [Header("Enemy")]
-    public EnemyController enemy;
-
     private int correctAnswers = 0;
     private int totalQuestions = 1;
+
+    [Header("Enemy")]
+    public EnemyController enemy;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +70,7 @@ public class Game : MonoBehaviour
         if (questionDatabase.questionCatagories.Count == 0)
         {
             questionDatabase.SetCatagories();
+            catagoryDropdown.AddOptions(questionDatabase.questionCatagories.Keys.ToList());
         }
         if (players.character == PlayerController.Character.Mage)
         {
@@ -66,19 +78,21 @@ public class Game : MonoBehaviour
             if (random.Next(1, 4) == 1)
             {
                 players.PlayMageAbilitySound();
-                // make it animals for now need UI first
-                LoadQuestionSet(enemy.health, "Animals");
+                // show catagory screen then load question set
+                ShowCatagoryScreen();
             }
             else
             {
-                LoadQuestionSet(enemy.health, "");
+                LoadQuestionSet(enemy.health, currentCatagory);
+                UseQuestionTemplate(currentQuestion.questionType);
+
             }
         } else
         {
-            LoadQuestionSet(enemy.health, "");
-        }
+            LoadQuestionSet(enemy.health, currentCatagory);
+            UseQuestionTemplate(currentQuestion.questionType);
 
-        UseQuestionTemplate(currentQuestion.questionType);
+        }
     }
 
     private void SetGamePrefs()
@@ -112,8 +126,7 @@ public class Game : MonoBehaviour
         //playerObject.GetComponent<PhotonView>().RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
 
         //playerCount
-        //players.Initialize(PlayerController.Character.Knight, 0);
-        players.Initialize(players.character, 0);
+        players.Initialize((PlayerController.Character)GamePrefs.characterOneId, 0);
     }
 
     void SpawnEnemy()
@@ -188,7 +201,9 @@ public class Game : MonoBehaviour
         }
         else
         {
-            LoadQuestionSet(enemy.health, "");
+            // clears out the catagory when new set is loaded 
+            currentCatagory = "";
+            LoadQuestionSet(enemy.health, currentCatagory);
             currentQuestionIndex = 0;
             currentQuestion = currentQuestionSet.questions[currentQuestionIndex];
             UseQuestionTemplate(currentQuestion.questionType);
@@ -199,14 +214,15 @@ public class Game : MonoBehaviour
     {
         backgroundSource.volume = 1f;
     }
-    private IEnumerator waitForAnimation()
+
+    private IEnumerator WaitForAnimation()
     {
         yield return new WaitForSeconds(3);
         ToggleTimer();
         if (players.dead)
         {
             // do score screen
-            scoreScreen.gameObject.SetActive(true);
+            defeatScreen.gameObject.SetActive(true);
             questionScreen.gameObject.SetActive(false);
             scorePercentage.text = string.Format("Percent Correct: \n{0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
             scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", totalQuestions, correctAnswers);
@@ -220,6 +236,22 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void ShowCatagoryScreen()
+    {
+        questionScreen.gameObject.SetActive(false);
+        catagorySelectScreen.gameObject.SetActive(true);
+        timerActive = false;
+    }
+
+    public void CatagorySelected()
+    {
+        questionScreen.gameObject.SetActive(true);
+        catagorySelectScreen.gameObject.SetActive(false);
+        timerActive = GamePrefs.timerOn && true;
+        currentCatagory = catagoryDropdown.options[catagoryDropdown.value].text;
+        LoadQuestionSet(enemy.health, currentCatagory);
+        UseQuestionTemplate(currentQuestion.questionType);
+    }
 
     public void CheckAnswer(string answer)
     {
@@ -251,7 +283,7 @@ public class Game : MonoBehaviour
             players.TakeDamage(1);
         }
 
-        StartCoroutine("waitForAnimation");
+        StartCoroutine("WaitForAnimation");
         ToggleTimer();
     }
 

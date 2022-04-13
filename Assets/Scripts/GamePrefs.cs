@@ -7,5 +7,9 @@ public static class GamePrefs
     [SerializeField]
     public static bool timerOn = true;
     [SerializeField]
-    public static float maxTimer = 10.0f;
+    public static float maxTimer = 15.0f;
+    [SerializeField]
+    public static PlayerController.Character characterOneId = PlayerController.Character.Knight;
+    [SerializeField]
+    public static PlayerController.Character characterTwoId = PlayerController.Character.Knight;
 }

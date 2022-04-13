@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterSelect : MonoBehaviour
 {
@@ -16,11 +17,13 @@ public class CharacterSelect : MonoBehaviour
 
     public void SelectKnight()
     {
-
+        GamePrefs.characterOneId = PlayerController.Character.Knight;
+        SceneManager.LoadScene("Question");
     }
 
     public void SelectMage()
     {
-
+        GamePrefs.characterOneId = PlayerController.Character.Mage;
+        SceneManager.LoadScene("Question");
     }
 }
