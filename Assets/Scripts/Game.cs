@@ -25,27 +25,31 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Sprite incorrectAnswerSprite, correctAnswerSprite;
     [SerializeField]
-    private Transform questionPanel;
-    [SerializeField]
-    private Transform answerPanel;
+    private Transform questionPanel, answerPanel;
     [SerializeField]
     private GameObject timerBar;
     [SerializeField]
     private Transform defeatScreen, questionScreen, victoryScreen, catagorySelectScreen;
     [SerializeField]
-    private TMPro.TextMeshProUGUI scoreStats, scorePercentage, scoreFinal;
+    private TMPro.TextMeshProUGUI scoreFinal, highScore;
     [SerializeField]
     private TMPro.TMP_Dropdown catagoryDropdown;
 
+    [Header("Victory screen UI elements")]
+    [SerializeField]
+    private TMPro.TextMeshProUGUI victoryText;
+    [SerializeField]
+    private TMPro.TextMeshProUGUI scorePercentage;
+    [SerializeField]
+    private Image defeatedEnemySprite;
+
     [Header("Audio")]
     [SerializeField]
-    private AudioClip correctSound;
+    private AudioClip regularBGM;
     [SerializeField]
-    private AudioClip incorrectSound;
-    [SerializeField]
-    private AudioClip defeatMusic;
+    private AudioClip correctSound, incorrectSound, defeatMusic, victoryFanfare, victoryMusic;
+    public AudioClip mageAbility, catagorySelect;
     private AudioSource backgroundSource, soundSource;
-
 
     [Header("Players")]
     public PlayerController players;
@@ -77,7 +81,6 @@ public class Game : MonoBehaviour
             System.Random random = new System.Random();
             if (random.Next(1, 4) == 1)
             {
-                players.PlayMageAbilitySound();
                 // show catagory screen then load question set
                 ShowCatagoryScreen();
             }
@@ -85,13 +88,11 @@ public class Game : MonoBehaviour
             {
                 LoadQuestionSet(enemy.health, currentCatagory);
                 UseQuestionTemplate(currentQuestion.questionType);
-
             }
         } else
         {
             LoadQuestionSet(enemy.health, currentCatagory);
             UseQuestionTemplate(currentQuestion.questionType);
-
         }
     }
 
@@ -201,8 +202,6 @@ public class Game : MonoBehaviour
         }
         else
         {
-            // clears out the catagory when new set is loaded 
-            currentCatagory = "";
             LoadQuestionSet(enemy.health, currentCatagory);
             currentQuestionIndex = 0;
             currentQuestion = currentQuestionSet.questions[currentQuestionIndex];
@@ -224,8 +223,11 @@ public class Game : MonoBehaviour
             // do score screen
             defeatScreen.gameObject.SetActive(true);
             questionScreen.gameObject.SetActive(false);
-            scorePercentage.text = string.Format("Percent Correct: \n{0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
-            scoreStats.text = string.Format("Questions: {0}\nCorrect: {1}", totalQuestions, correctAnswers);
+            if (players.score > PlayerPrefs.GetInt("highscore", 0))
+            {
+                PlayerPrefs.SetInt("highscore", players.score);
+            }
+            highScore.text = string.Format("Highscore: \n {0}", PlayerPrefs.GetInt("highscore", 0));
             scoreFinal.text = string.Format("Final Score: \n {0}", players.score);
             PlayDefeatedMusic();
         }
@@ -241,6 +243,57 @@ public class Game : MonoBehaviour
         questionScreen.gameObject.SetActive(false);
         catagorySelectScreen.gameObject.SetActive(true);
         timerActive = false;
+        PlayMageAbilitySound();
+    }
+
+    private void ShowVictoryScreen()
+    {
+        questionScreen.gameObject.SetActive(false);
+        victoryScreen.gameObject.SetActive(true);
+        timerActive = false;
+        currentCatagory = "";
+        ClearAnswers();
+        StartCoroutine("PlayVictoryMusic");
+        TogglePlayerInput();
+
+        scorePercentage.text = string.Format("Percent Correct: \n{0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
+        victoryText.text = string.Format("You defeated the\n{0}!", enemy.enemyName);
+        defeatedEnemySprite.sprite = enemy.enemyIcon.sprite;
+    }
+
+    public void StartNextEncounter()
+    {
+        questionScreen.gameObject.SetActive(true);
+        victoryScreen.gameObject.SetActive(false);
+        timerActive = GamePrefs.timerOn && true;
+
+        correctAnswers = 0;
+        totalQuestions = 0;
+
+        // for now make a new enemy
+        backgroundSource.Stop();
+        backgroundSource.PlayOneShot(regularBGM);
+        backgroundSource.loop = true;
+        SpawnEnemy();
+        if (players.character == PlayerController.Character.Mage)
+        {
+            System.Random random = new System.Random();
+            if (random.Next(1, 4) == 1)
+            {
+                // show catagory screen then load question set
+                ShowCatagoryScreen();
+            }
+            else
+            {
+                LoadQuestionSet(enemy.health, currentCatagory);
+                UseQuestionTemplate(currentQuestion.questionType);
+            }
+        }
+        else
+        {
+            LoadQuestionSet(enemy.health, currentCatagory);
+            UseQuestionTemplate(currentQuestion.questionType);
+        }
     }
 
     public void CatagorySelected()
@@ -248,6 +301,7 @@ public class Game : MonoBehaviour
         questionScreen.gameObject.SetActive(true);
         catagorySelectScreen.gameObject.SetActive(false);
         timerActive = GamePrefs.timerOn && true;
+        soundSource.PlayOneShot(catagorySelect);
         currentCatagory = catagoryDropdown.options[catagoryDropdown.value].text;
         LoadQuestionSet(enemy.health, currentCatagory);
         UseQuestionTemplate(currentQuestion.questionType);
@@ -265,13 +319,7 @@ public class Game : MonoBehaviour
             soundSource.PlayOneShot(correctSound);
             players.GainScore(1 + (int)timeLeft);
             enemy.TakeDamage(1);
-            if (enemy.dead)
-            {
-                // start death animation for enemy
 
-                // for now make a new enemy
-                SpawnEnemy();
-            }
         }
         else
         {
@@ -282,9 +330,15 @@ public class Game : MonoBehaviour
             soundSource.PlayOneShot(incorrectSound);
             players.TakeDamage(1);
         }
-
-        StartCoroutine("WaitForAnimation");
-        ToggleTimer();
+        if (enemy.dead)
+        {
+            // start death animation for enemy
+            ShowVictoryScreen();
+        } else
+        {
+            StartCoroutine("WaitForAnimation");
+            ToggleTimer();
+        }
     }
 
     public void ToggleTimer()
@@ -302,6 +356,23 @@ public class Game : MonoBehaviour
         backgroundSource.Stop();
         backgroundSource.loop = true;
         backgroundSource.PlayOneShot(defeatMusic);
+    }
+
+    public void PlayMageAbilitySound()
+    {
+        soundSource.PlayOneShot(mageAbility);
+    }
+
+    IEnumerator PlayVictoryMusic()
+    {
+        backgroundSource.Stop();
+        backgroundSource.clip = victoryFanfare;
+        backgroundSource.Play();
+        yield return new WaitForSeconds(backgroundSource.clip.length);
+        FindObjectsOfType<Button>().ToList().ForEach(x => x.interactable = true);
+        backgroundSource.clip = victoryMusic;
+        backgroundSource.loop = true;
+        backgroundSource.Play();
     }
 
     public void HighlightCorrectAnswer(string answer)

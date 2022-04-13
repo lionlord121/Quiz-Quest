@@ -28,8 +28,6 @@ public class PlayerController : MonoBehaviour
     public AudioClip attackSound;
     public AudioClip hurtSound;
     public AudioClip blockSound;
-    public AudioClip mageAbility;
-
     private AudioSource source;
 
     // local player
@@ -112,11 +110,6 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetTrigger("attacking");
         source.PlayOneShot(attackSound);
-    }
-
-    public void PlayMageAbilitySound()
-    {
-        source.PlayOneShot(mageAbility);
     }
 
     public void TakeDamage(int damage)

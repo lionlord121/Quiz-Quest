@@ -40,6 +40,7 @@ public class EnemyController : MonoBehaviour
     public bool dead;
     public Animator anim;
     public Image enemyIcon;
+    public string enemyName;
 
     [Header("Enemy Sprites")]
     public Sprite spriteAssassin;
@@ -85,106 +86,132 @@ public class EnemyController : MonoBehaviour
             case Enemy.Assassin:
                 health = 4;
                 enemyIcon.sprite = spriteAssassin;
+                enemyName = "Assassin";
                 break;
             case Enemy.Cultist:
                 health = 3;
                 enemyIcon.sprite = spriteCultist;
+                enemyName = "Cultist";
                 break;
             case Enemy.Darkreaper:
                 health = 5;
                 enemyIcon.sprite = spriteDarkreaper;
+                enemyName = "Darkreaper";
                 break;
             case Enemy.Drow:
                 health = 3;
                 enemyIcon.sprite = spriteDrow;
+                enemyName = "Drow Ranger";
                 break;
             case Enemy.Frogman:
                 health = 3;
                 enemyIcon.sprite = spriteFrogman;
+                enemyName = "Frogman";
                 break;
             case Enemy.Ghost:
                 health = 2;
                 enemyIcon.sprite = spriteGhost;
+                enemyName = "Ghost";
                 break;
             case Enemy.GiantSpider:
                 health = 2;
                 enemyIcon.sprite = spriteGiantSpider;
+                enemyName = "Giant Spider";
                 break;
             case Enemy.Gnoll:
                 health = 3;
                 enemyIcon.sprite = spriteGnoll;
+                enemyName = "Gnoll";
                 break;
             case Enemy.Goblin:
                 health = 3;
                 enemyIcon.sprite = spriteGoblin;
+                enemyName = "Goblin";
                 break;
             case Enemy.Hobgoblin:
                 health = 4;
                 enemyIcon.sprite = spriteHobgoblin;
+                enemyName = "Hobgolbin";
                 break;
             case Enemy.Icegolem:
                 health = 6;
                 enemyIcon.sprite = spriteIcegolem;
+                enemyName = "Ice Golem";
                 break;
             case Enemy.Imp:
                 health = 4;
                 enemyIcon.sprite = spriteImp;
+                enemyName = "Imp";
                 break;
             case Enemy.Lizardman:
                 health = 4;
                 enemyIcon.sprite = spriteLizardman;
+                enemyName = "Lizardman";
                 break;
             case Enemy.Magmagolem:
                 health = 7;
                 enemyIcon.sprite = spriteMagmagolem;
+                enemyName = "Magma Golem";
                 break;
             case Enemy.Ogre:
                 health = 8;
                 enemyIcon.sprite = spriteOgre;
+                enemyName = "Ogre";
                 break;
             case Enemy.Ruffian:
                 health = 3;
                 enemyIcon.sprite = spriteRuffian;
+                enemyName = "Ruffian";
                 break;
             case Enemy.Scout:
                 health = 2;
                 enemyIcon.sprite = spriteScout;
+                enemyName = "Scout";
                 break;
             case Enemy.SkelWar:
                 health = 2;
                 enemyIcon.sprite = spriteSkelWar;
+                enemyName = "Skeleton Warrior";
                 break;
             case Enemy.Slime:
                 health = 1;
                 enemyIcon.sprite = spriteSlime;
+                enemyName = "Slime";
                 break;
             case Enemy.Stonegolem:
                 health = 7;
                 enemyIcon.sprite = spriteStonegolem;
+                enemyName = "Stone Golem";
                 break;
             case Enemy.Swashbuckler:
                 health = 4;
                 enemyIcon.sprite = spriteSwashbuckler;
+                enemyName = "Swashbuckler";
                 break;
             case Enemy.Troll:
                 health = 7;
                 enemyIcon.sprite = spriteTroll;
+                enemyName = "Troll";
                 break;
             case Enemy.Tyrant:
                 health = 8;
                 enemyIcon.sprite = spriteTyrant;
+                enemyName = "Tyrant";
                 break;
             case Enemy.Wererat:
                 health = 2;
                 enemyIcon.sprite = spriteWererat;
+                enemyName = "Wererat";
                 break;
             case Enemy.Zombie:
                 health = 3;
                 enemyIcon.sprite = spriteZombie;
+                enemyName = "Zombie";
                 break;
             default:
                 health = 1;
                 enemyIcon.sprite = spriteSlime;
+                enemyName = "Slime";
                 break;
         }
         enemyInfo.Initialize(health, 0);
@@ -231,12 +258,5 @@ public class EnemyController : MonoBehaviour
     void Die()
     {
         dead = true;
-        //rig.isKinematic = true;
-
-        //transform.position = new Vector3(0, 99, 0);
-
-        //Vector3 spawnPos = GameManager.instance.spawnPoints[Random.Range(0, GameManager.instance.spawnPoints.Length)].position;
-
-        //StartCoroutine(Spawn(spawnPos, GameManager.instance.respawnTime));
     }
 }
