@@ -31,7 +31,7 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Transform defeatScreen, questionScreen, victoryScreen, catagorySelectScreen;
     [SerializeField]
-    private TMPro.TextMeshProUGUI scoreFinal, highScore;
+    private TMPro.TextMeshProUGUI scoreFinal, highScore, totalQuestionsTxt;
     [SerializeField]
     private TMPro.TMP_Dropdown catagoryDropdown;
 
@@ -193,6 +193,7 @@ public class Game : MonoBehaviour
     void NextQuestion()
     {
         totalQuestions++;
+        totalQuestionsTxt.text = string.Format("Question: {0}", totalQuestions);
         timeLeft = maxTimer;
         if (currentQuestionIndex < currentQuestionSet.questions.Count-1)
         {
@@ -268,7 +269,8 @@ public class Game : MonoBehaviour
         timerActive = GamePrefs.timerOn && true;
 
         correctAnswers = 0;
-        totalQuestions = 0;
+        totalQuestions = 1;
+        totalQuestionsTxt.text = string.Format("Question: {0}", totalQuestions);
 
         // for now make a new enemy
         backgroundSource.Stop();
@@ -319,7 +321,6 @@ public class Game : MonoBehaviour
             soundSource.PlayOneShot(correctSound);
             players.GainScore(1 + (int)timeLeft);
             enemy.TakeDamage(1);
-
         }
         else
         {

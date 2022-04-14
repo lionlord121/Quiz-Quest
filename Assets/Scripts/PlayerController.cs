@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public Image characterSprite;
     public bool dead;
     public Animator anim;
+    private int scoreForHealth;
 
     [Header("Character Sprites")]
     public Sprite knightSprite;
@@ -26,13 +27,11 @@ public class PlayerController : MonoBehaviour
 
     [Header("SFX")]
     public AudioClip attackSound;
-    public AudioClip hurtSound;
-    public AudioClip blockSound;
+    public AudioClip hurtSound, blockSound, healSound;
     private AudioSource source;
 
     // local player
     public static PlayerController me;
-
 
     public void Initialize(Character character, int currentHp)
     {
@@ -125,14 +124,17 @@ public class PlayerController : MonoBehaviour
         }
         health -= damage;
 
-        // update the health bar
-        playerInfo.SetHealth(health);
-
-        if (health <= 0)
-            Die();
-        else
+        if (damage != 0)
         {
-            GetsHurt();
+            // update the health bar
+            playerInfo.SetHealth(health);
+
+            if (health <= 0)
+                Die();
+            else
+            {
+                GetsHurt();
+            }
         }
     }
 
@@ -174,6 +176,7 @@ public class PlayerController : MonoBehaviour
     void Heal (int amountToHeal)
     {
         health = Mathf.Clamp(health + amountToHeal, 0, maxHealth);
+        source.PlayOneShot(healSound);
         // update the health bar
         playerInfo.SetHealth(health);
     }
@@ -182,9 +185,14 @@ public class PlayerController : MonoBehaviour
     {
         // update the current score
         score += scoreToGive;
+        scoreForHealth += scoreToGive;
+        // heal at every 50 points
+        if (scoreForHealth >= 50)
+        {
+            scoreForHealth -= 50;
+            Heal(1);
+        }
         // update the ui
         playerInfo.UpdateScore(scoreToGive);
-        // heal when at this score
-        //Heal(1);
     }
 }
