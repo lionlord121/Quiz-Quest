@@ -15,6 +15,7 @@ public class Game : MonoBehaviour
     private int currentQuestionIndex;
     private string currentCatagory ="";
 
+    private int clericAbiltiy = 0;
     private float timeLeft = 15.0f;
     private float maxTimer = 15.0f;
     private bool timerActive = true;
@@ -42,13 +43,16 @@ public class Game : MonoBehaviour
     private TMPro.TextMeshProUGUI scorePercentage;
     [SerializeField]
     private Image defeatedEnemySprite;
+    [SerializeField]
+    private GameObject victoryContinueBtn;
+
 
     [Header("Audio")]
     [SerializeField]
     private AudioClip regularBGM;
     [SerializeField]
-    private AudioClip correctSound, incorrectSound, defeatMusic, victoryFanfare, victoryMusic;
-    public AudioClip mageAbility, catagorySelect;
+    private AudioClip correctSound, incorrectSound, critSound, defeatMusic, victoryFanfare, victoryMusic;
+    public AudioClip mageAbility, clericAbilty, catagorySelect;
     private AudioSource backgroundSource, soundSource;
 
     [Header("Players")]
@@ -78,21 +82,31 @@ public class Game : MonoBehaviour
         }
         if (players.character == PlayerController.Character.Mage)
         {
-            System.Random random = new System.Random();
-            if (random.Next(1, 4) == 1)
-            {
-                // show catagory screen then load question set
-                ShowCatagoryScreen();
-            }
-            else
-            {
-                LoadQuestionSet(enemy.health, currentCatagory);
-                UseQuestionTemplate(currentQuestion.questionType);
-            }
-        } else
+            MageAbility();
+        }
+        else
         {
             LoadQuestionSet(enemy.health, currentCatagory);
             UseQuestionTemplate(currentQuestion.questionType);
+            if (players.character == PlayerController.Character.Cleric)
+            {
+                System.Random random = new System.Random();
+                int currentRoll = random.Next(1, 8);
+                if (currentRoll == 1)
+                {
+                    clericAbiltiy = 1;
+                }
+                else if (currentRoll == 2)
+                {
+                    clericAbiltiy = 2;
+                }
+                else
+                {
+                    clericAbiltiy = 0;
+                }
+                // check if cleric ability triggered and eliminate wrong answers
+                ClericAbility(clericAbiltiy);
+            }
         }
     }
 
@@ -163,6 +177,51 @@ public class Game : MonoBehaviour
             }
         }
     }
+
+    void MageAbility()
+    {
+        System.Random random = new System.Random();
+        if (random.Next(1, 4) == 1)
+        {
+            // show catagory screen then load question set
+            ShowCatagoryScreen();
+        }
+        else
+        {
+            LoadQuestionSet(enemy.health, currentCatagory);
+            UseQuestionTemplate(currentQuestion.questionType);
+        }
+    }
+
+    void AssassinAbility()
+    {
+        System.Random random = new System.Random();
+        if (random.Next(1, 4) == 1)
+        {
+            soundSource.PlayOneShot(critSound);
+            // crit animation for assassin
+            enemy.TakeDamage(2);
+        }
+        else
+        {
+            enemy.TakeDamage(1);
+        }
+    }
+
+    void ClericAbility(int questionsToRemove)
+    {
+        if (questionsToRemove == 1)
+        {
+            soundSource.PlayOneShot(clericAbilty);
+            FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() != currentQuestion.correctAnswerKey).ToArray()[0].gameObject.SetActive(false);
+        }
+        else if (questionsToRemove == 2)
+        {
+            soundSource.PlayOneShot(clericAbilty);
+            FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() != currentQuestion.correctAnswerKey).ToArray()[0].gameObject.SetActive(false);
+            FindObjectsOfType<AnswerButton>().Where(x => x.GetAnswer() != currentQuestion.correctAnswerKey).ToArray()[1].gameObject.SetActive(false);
+        }
+    }
     //public void NextQuestionSet()
     //{
     //    if(level < questionDatabase.questionSets.Length - 1)
@@ -208,6 +267,8 @@ public class Game : MonoBehaviour
             currentQuestion = currentQuestionSet.questions[currentQuestionIndex];
             UseQuestionTemplate(currentQuestion.questionType);
         }
+        // check if cleric ability triggered and eliminate wrong answers
+        ClericAbility(clericAbiltiy);
     }
 
     private void ChangeVolume()
@@ -253,9 +314,11 @@ public class Game : MonoBehaviour
         victoryScreen.gameObject.SetActive(true);
         timerActive = false;
         currentCatagory = "";
+        clericAbiltiy = 0;
         ClearAnswers();
         StartCoroutine("PlayVictoryMusic");
-        TogglePlayerInput();
+        // hide the button until after the inital music
+        victoryContinueBtn.SetActive(false);
 
         scorePercentage.text = string.Format("Percent Correct: \n{0}%", Mathf.Floor((float)correctAnswers / (float)totalQuestions * 100));
         victoryText.text = string.Format("You defeated the\n{0}!", enemy.enemyName);
@@ -279,22 +342,30 @@ public class Game : MonoBehaviour
         SpawnEnemy();
         if (players.character == PlayerController.Character.Mage)
         {
-            System.Random random = new System.Random();
-            if (random.Next(1, 4) == 1)
-            {
-                // show catagory screen then load question set
-                ShowCatagoryScreen();
-            }
-            else
-            {
-                LoadQuestionSet(enemy.health, currentCatagory);
-                UseQuestionTemplate(currentQuestion.questionType);
-            }
+            MageAbility();
         }
         else
         {
             LoadQuestionSet(enemy.health, currentCatagory);
             UseQuestionTemplate(currentQuestion.questionType);
+            if (players.character == PlayerController.Character.Cleric)
+            {
+                System.Random random = new System.Random();
+                int currentRoll = random.Next(1, 8);
+                if(currentRoll == 1)
+                {
+                    clericAbiltiy = 1;
+                }
+                else if (currentRoll == 2)
+                {
+                    clericAbiltiy = 2;
+                } else
+                {
+                    clericAbiltiy = 0;
+                }
+                // check if cleric ability triggered and eliminate wrong answers
+                ClericAbility(clericAbiltiy);
+            }
         }
     }
 
@@ -320,7 +391,14 @@ public class Game : MonoBehaviour
             correctAnswers++;
             soundSource.PlayOneShot(correctSound);
             players.GainScore(1 + (int)timeLeft);
-            enemy.TakeDamage(1);
+            // if an assassin get an question correct, check for crit
+            if (players.character == PlayerController.Character.Assassin)
+            {
+                AssassinAbility();
+            } else
+            {
+                enemy.TakeDamage(1);
+            }
         }
         else
         {
@@ -370,7 +448,7 @@ public class Game : MonoBehaviour
         backgroundSource.clip = victoryFanfare;
         backgroundSource.Play();
         yield return new WaitForSeconds(backgroundSource.clip.length);
-        FindObjectsOfType<Button>().ToList().ForEach(x => x.interactable = true);
+        victoryContinueBtn.SetActive(true);
         backgroundSource.clip = victoryMusic;
         backgroundSource.loop = true;
         backgroundSource.Play();

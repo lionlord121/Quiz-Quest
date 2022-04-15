@@ -305,13 +305,13 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 58701220}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 520312738}
-        m_MethodName: SelectMage
+        m_MethodName: SelectAssassin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 99856339}
   - component: {fileID: 99856338}
   m_Layer: 5
-  m_Name: ValkyrieSelectBtn
+  m_Name: ClericSelectBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -506,13 +506,13 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 99856339}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 520312738}
-        m_MethodName: SelectMage
+        m_MethodName: SelectCleric
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -616,7 +616,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Not Done yet
+  m_text: Select
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f66a538ad31a9724983eb4006731541d, type: 2}
   m_sharedMaterial: {fileID: 7040881477966657612, guid: f66a538ad31a9724983eb4006731541d,
@@ -686,10 +686,10 @@ MonoBehaviour:
   m_margin: {x: 60.25299, y: 0, z: 58.427246, w: 0}
   m_textInfo:
     textComponent: {fileID: 179322114}
-    characterCount: 12
+    characterCount: 6
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 0
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -3488,7 +3488,7 @@ GameObject:
   - component: {fileID: 1752902543}
   - component: {fileID: 1752902542}
   m_Layer: 5
-  m_Name: Valkyrie
+  m_Name: Cleric
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3708,7 +3708,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Not Done yet
+  m_text: Select
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f66a538ad31a9724983eb4006731541d, type: 2}
   m_sharedMaterial: {fileID: 7040881477966657612, guid: f66a538ad31a9724983eb4006731541d,
@@ -3778,10 +3778,10 @@ MonoBehaviour:
   m_margin: {x: 60.25299, y: 0, z: 58.427246, w: 0}
   m_textInfo:
     textComponent: {fileID: 1852603815}
-    characterCount: 12
+    characterCount: 6
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 0
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1

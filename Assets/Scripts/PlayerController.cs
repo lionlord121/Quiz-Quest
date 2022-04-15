@@ -47,18 +47,25 @@ public class PlayerController : MonoBehaviour
         {
             case Character.Knight:
                 characterSprite.sprite = knightSprite;
+                characterSprite.rectTransform.sizeDelta = new Vector2(235, 223);
+
                 break;
             case Character.Mage:
                 characterSprite.sprite = mageSprite;
+                characterSprite.rectTransform.sizeDelta = new Vector2(171, 223);
+
                 break;
             case Character.Cleric:
                 characterSprite.sprite = clericSprite;
+                characterSprite.rectTransform.sizeDelta = new Vector2(91, 228);
                 break;
             case Character.Assassin:
                 characterSprite.sprite = assassinSprite;
+                characterSprite.rectTransform.sizeDelta = new Vector2(176, 222);
                 break;
             default:
                 characterSprite.sprite = knightSprite;
+                characterSprite.rectTransform.sizeDelta = new Vector2(235, 223);
                 break;
         }
     }
