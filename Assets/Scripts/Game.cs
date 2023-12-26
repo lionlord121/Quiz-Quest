@@ -13,7 +13,7 @@ public class Game : MonoBehaviour
     private QuestionSet currentQuestionSet;
     private Question currentQuestion;
     private int currentQuestionIndex;
-    private string currentCatagory ="";
+    private string currentCategory ="";
 
     private int clericAbiltiy = 0;
     private float timeLeft = 15.0f;
@@ -26,15 +26,15 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Sprite incorrectAnswerSprite, correctAnswerSprite;
     [SerializeField]
-    private Transform questionPanel, answerPanel;
+    private Transform questionPanel, answerPanel, categoriesPanel;
     [SerializeField]
     private GameObject timerBar;
     [SerializeField]
-    private Transform defeatScreen, questionScreen, victoryScreen, catagorySelectScreen;
+    private Transform defeatScreen, questionScreen, victoryScreen, categorySelectScreen;
     [SerializeField]
     private TMPro.TextMeshProUGUI scoreFinal, highScore, totalQuestionsTxt;
     [SerializeField]
-    private TMPro.TMP_Dropdown catagoryDropdown;
+    private TMPro.TMP_Dropdown categoryDropdown;
 
     [Header("Victory screen UI elements")]
     [SerializeField]
@@ -46,13 +46,12 @@ public class Game : MonoBehaviour
     [SerializeField]
     private GameObject victoryContinueBtn;
 
-
     [Header("Audio")]
     [SerializeField]
     private AudioClip regularBGM;
     [SerializeField]
     private AudioClip correctSound, incorrectSound, critSound, defeatMusic, victoryFanfare, victoryMusic;
-    public AudioClip mageAbility, clericAbilty, catagorySelect;
+    public AudioClip mageAbility, clericAbilty, categorySelect;
     private AudioSource backgroundSource, soundSource;
 
     [Header("Players")]
@@ -72,36 +71,30 @@ public class Game : MonoBehaviour
         soundSource = GetComponent<AudioSource>();
         level = PlayerPrefs.GetInt("level", 0);
         SetGamePrefs();
+        questionDatabase.GetAPISession();
+        if (questionDatabase.questionCatagories.Count == 0)
+        {
+            questionDatabase.SetCatagories();
+            BuildCategoriesUI();
+        }
 
         if (GamePrefs.triviaMode)
         {
             SpawnPlayerCurrent(1);
             SpawnEnemy(19);
-            questionDatabase.GetAPISession();
-            if (questionDatabase.questionCatagories.Count == 0)
-            {
-                questionDatabase.SetCatagories();
-                catagoryDropdown.AddOptions(questionDatabase.questionCatagories.Keys.ToList());
-            }
             MageAbility();
         }
         else
         {
             SpawnPlayer();
             SpawnEnemy();
-            questionDatabase.GetAPISession();
-            if (questionDatabase.questionCatagories.Count == 0)
-            {
-                questionDatabase.SetCatagories();
-                catagoryDropdown.AddOptions(questionDatabase.questionCatagories.Keys.ToList());
-            }
             if (players.character == PlayerController.Character.Mage)
             {
                 MageAbility();
             }
             else
             {
-                LoadQuestionSet(enemy.health, currentCatagory);
+                LoadQuestionSet(enemy.health, currentCategory);
                 UseQuestionTemplate(currentQuestion.questionType);
                 if (players.character == PlayerController.Character.Cleric)
                 {
@@ -180,9 +173,9 @@ public class Game : MonoBehaviour
         enemy.Initialize(enemyId);
     }
 
-    void LoadQuestionSet(int questionCount, string catagoryName)
+    void LoadQuestionSet(int questionCount, string categoryName)
     {
-        currentQuestionSet = questionDatabase.GetQuestionSet(level, questionCount, catagoryName);
+        currentQuestionSet = questionDatabase.GetQuestionSet(level, questionCount, categoryName);
         currentQuestion = currentQuestionSet.questions[0];
     }
 
@@ -207,23 +200,29 @@ public class Game : MonoBehaviour
         }
     }
 
+    void BuildCategoriesUI()
+    {
+        GameObject categoriesPanel = categorySelectScreen.GetChild(0).gameObject;
+        categoriesPanel.GetComponent<CategoryUI>().UpdateCategories(questionDatabase.questionCatagories.Keys.ToList());
+    }
+
     void MageAbility()
     {
         if (GamePrefs.triviaMode)
         {
-            ShowCatagoryScreen();
+            ShowCategoryScreen();
         }
         else
         {
             System.Random random = new System.Random();
             if (random.Next(1, 4) == 1)
             {
-                // show catagory screen then load question set
-                ShowCatagoryScreen();
+                // show category screen then load question set
+                ShowCategoryScreen();
             }
             else
             {
-                LoadQuestionSet(enemy.health, currentCatagory);
+                LoadQuestionSet(enemy.health, currentCategory);
                 UseQuestionTemplate(currentQuestion.questionType);
             }
         }
@@ -298,7 +297,7 @@ public class Game : MonoBehaviour
         }
         else
         {
-            LoadQuestionSet(enemy.health, currentCatagory);
+            LoadQuestionSet(enemy.health, currentCategory);
             currentQuestionIndex = 0;
             currentQuestion = currentQuestionSet.questions[currentQuestionIndex];
             UseQuestionTemplate(currentQuestion.questionType);
@@ -336,10 +335,10 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void ShowCatagoryScreen()
+    private void ShowCategoryScreen()
     {
         questionScreen.gameObject.SetActive(false);
-        catagorySelectScreen.gameObject.SetActive(true);
+        categorySelectScreen.gameObject.SetActive(true);
         timerActive = false;
         PlayMageAbilitySound();
     }
@@ -350,7 +349,7 @@ public class Game : MonoBehaviour
         questionScreen.gameObject.SetActive(false);
         victoryScreen.gameObject.SetActive(true);
         timerActive = false;
-        currentCatagory = "";
+        currentCategory = "";
         clericAbiltiy = 0;
         ClearAnswers();
         StartCoroutine("PlayVictoryMusic");
@@ -388,7 +387,7 @@ public class Game : MonoBehaviour
             }
             else
             {
-                LoadQuestionSet(enemy.health, currentCatagory);
+                LoadQuestionSet(enemy.health, currentCategory);
                 UseQuestionTemplate(currentQuestion.questionType);
                 if (players.character == PlayerController.Character.Cleric)
                 {
@@ -413,14 +412,14 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void CatagorySelected()
+    public void CategorySelected(string category)
     {
         questionScreen.gameObject.SetActive(true);
-        catagorySelectScreen.gameObject.SetActive(false);
+        categorySelectScreen.gameObject.SetActive(false);
         timerActive = GamePrefs.timerOn && true;
-        soundSource.PlayOneShot(catagorySelect);
-        currentCatagory = catagoryDropdown.options[catagoryDropdown.value].text;
-        LoadQuestionSet(enemy.health, currentCatagory);
+        soundSource.PlayOneShot(categorySelect);
+        currentCategory = category;
+        LoadQuestionSet(enemy.health, currentCategory);
         UseQuestionTemplate(currentQuestion.questionType);
     }
 
