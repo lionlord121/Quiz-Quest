@@ -40,6 +40,14 @@ public class PlayerController : MonoBehaviour
         source = GetComponent<AudioSource>();
     }
 
+    public void InitializeCurrent(Character character, int currentHp)
+    {
+        health = currentHp;
+        GetCharacterSelection(character);
+        playerInfo.Initialize(health, 0);
+        source = GetComponent<AudioSource>();
+    }
+
     private void GetCharacterSelection(Character character)
     {
         this.character = character;

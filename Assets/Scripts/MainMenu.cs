@@ -22,6 +22,16 @@ public class MainMenu : MonoBehaviour
     {
         PlayerPrefs.SetInt("level", 0);
         SceneManager.LoadScene("Character Select");
+        GamePrefs.triviaMode = false;
+    }
+
+    public void TriviaMode()
+    {
+        PlayerPrefs.SetInt("level", 0);
+        GamePrefs.characterOneId = PlayerController.Character.Mage;
+        SceneManager.LoadScene("Question");
+        GamePrefs.timerOn = false;
+        GamePrefs.triviaMode = true;
     }
 
     public void ToggleTimer(bool val)

@@ -72,42 +72,59 @@ public class Game : MonoBehaviour
         soundSource = GetComponent<AudioSource>();
         level = PlayerPrefs.GetInt("level", 0);
         SetGamePrefs();
-        SpawnPlayer();
-        SpawnEnemy();
-        questionDatabase.GetAPISession();
-        if (questionDatabase.questionCatagories.Count == 0)
+
+        if (GamePrefs.triviaMode)
         {
-            questionDatabase.SetCatagories();
-            catagoryDropdown.AddOptions(questionDatabase.questionCatagories.Keys.ToList());
-        }
-        if (players.character == PlayerController.Character.Mage)
-        {
+            SpawnPlayerCurrent(1);
+            SpawnEnemy(19);
+            questionDatabase.GetAPISession();
+            if (questionDatabase.questionCatagories.Count == 0)
+            {
+                questionDatabase.SetCatagories();
+                catagoryDropdown.AddOptions(questionDatabase.questionCatagories.Keys.ToList());
+            }
             MageAbility();
         }
         else
         {
-            LoadQuestionSet(enemy.health, currentCatagory);
-            UseQuestionTemplate(currentQuestion.questionType);
-            if (players.character == PlayerController.Character.Cleric)
+            SpawnPlayer();
+            SpawnEnemy();
+            questionDatabase.GetAPISession();
+            if (questionDatabase.questionCatagories.Count == 0)
             {
-                System.Random random = new System.Random();
-                int currentRoll = random.Next(1, 8);
-                if (currentRoll == 1)
+                questionDatabase.SetCatagories();
+                catagoryDropdown.AddOptions(questionDatabase.questionCatagories.Keys.ToList());
+            }
+            if (players.character == PlayerController.Character.Mage)
+            {
+                MageAbility();
+            }
+            else
+            {
+                LoadQuestionSet(enemy.health, currentCatagory);
+                UseQuestionTemplate(currentQuestion.questionType);
+                if (players.character == PlayerController.Character.Cleric)
                 {
-                    clericAbiltiy = 1;
+                    System.Random random = new System.Random();
+                    int currentRoll = random.Next(1, 8);
+                    if (currentRoll == 1)
+                    {
+                        clericAbiltiy = 1;
+                    }
+                    else if (currentRoll == 2)
+                    {
+                        clericAbiltiy = 2;
+                    }
+                    else
+                    {
+                        clericAbiltiy = 0;
+                    }
+                    // check if cleric ability triggered and eliminate wrong answers
+                    ClericAbility(clericAbiltiy);
                 }
-                else if (currentRoll == 2)
-                {
-                    clericAbiltiy = 2;
-                }
-                else
-                {
-                    clericAbiltiy = 0;
-                }
-                // check if cleric ability triggered and eliminate wrong answers
-                ClericAbility(clericAbiltiy);
             }
         }
+     
     }
 
     private void SetGamePrefs()
@@ -144,6 +161,18 @@ public class Game : MonoBehaviour
         players.Initialize((PlayerController.Character)GamePrefs.characterOneId, 0);
     }
 
+    void SpawnPlayerCurrent(int currentHp)
+    {
+        players.InitializeCurrent((PlayerController.Character)GamePrefs.characterOneId, currentHp);
+    }
+
+    // When I need a specific enemy
+    void SpawnEnemy(int overrideId)
+    {
+        enemy.Initialize(overrideId);
+    }
+
+    // when I need a random enemy
     void SpawnEnemy()
     {
         System.Random rnd = new System.Random();
@@ -180,16 +209,23 @@ public class Game : MonoBehaviour
 
     void MageAbility()
     {
-        System.Random random = new System.Random();
-        if (random.Next(1, 4) == 1)
+        if (GamePrefs.triviaMode)
         {
-            // show catagory screen then load question set
             ShowCatagoryScreen();
         }
         else
         {
-            LoadQuestionSet(enemy.health, currentCatagory);
-            UseQuestionTemplate(currentQuestion.questionType);
+            System.Random random = new System.Random();
+            if (random.Next(1, 4) == 1)
+            {
+                // show catagory screen then load question set
+                ShowCatagoryScreen();
+            }
+            else
+            {
+                LoadQuestionSet(enemy.health, currentCatagory);
+                UseQuestionTemplate(currentQuestion.questionType);
+            }
         }
     }
 
@@ -310,6 +346,7 @@ public class Game : MonoBehaviour
 
     private void ShowVictoryScreen()
     {
+
         questionScreen.gameObject.SetActive(false);
         victoryScreen.gameObject.SetActive(true);
         timerActive = false;
@@ -327,44 +364,51 @@ public class Game : MonoBehaviour
 
     public void StartNextEncounter()
     {
-        questionScreen.gameObject.SetActive(true);
-        victoryScreen.gameObject.SetActive(false);
-        timerActive = GamePrefs.timerOn && true;
-
-        correctAnswers = 0;
-        totalQuestions = 1;
-        totalQuestionsTxt.text = string.Format("Question: {0}", totalQuestions);
-
-        // for now make a new enemy
-        backgroundSource.Stop();
-        backgroundSource.PlayOneShot(regularBGM);
-        backgroundSource.loop = true;
-        SpawnEnemy();
-        if (players.character == PlayerController.Character.Mage)
+        if (GamePrefs.triviaMode)
         {
-            MageAbility();
-        }
-        else
+            ReturnToMainMenu();
+        } else
         {
-            LoadQuestionSet(enemy.health, currentCatagory);
-            UseQuestionTemplate(currentQuestion.questionType);
-            if (players.character == PlayerController.Character.Cleric)
+            questionScreen.gameObject.SetActive(true);
+            victoryScreen.gameObject.SetActive(false);
+            timerActive = GamePrefs.timerOn && true;
+
+            correctAnswers = 0;
+            totalQuestions = 1;
+            totalQuestionsTxt.text = string.Format("Question: {0}", totalQuestions);
+
+            // for now make a new enemy
+            backgroundSource.Stop();
+            backgroundSource.PlayOneShot(regularBGM);
+            backgroundSource.loop = true;
+            SpawnEnemy();
+            if (players.character == PlayerController.Character.Mage)
             {
-                System.Random random = new System.Random();
-                int currentRoll = random.Next(1, 8);
-                if(currentRoll == 1)
+                MageAbility();
+            }
+            else
+            {
+                LoadQuestionSet(enemy.health, currentCatagory);
+                UseQuestionTemplate(currentQuestion.questionType);
+                if (players.character == PlayerController.Character.Cleric)
                 {
-                    clericAbiltiy = 1;
+                    System.Random random = new System.Random();
+                    int currentRoll = random.Next(1, 8);
+                    if (currentRoll == 1)
+                    {
+                        clericAbiltiy = 1;
+                    }
+                    else if (currentRoll == 2)
+                    {
+                        clericAbiltiy = 2;
+                    }
+                    else
+                    {
+                        clericAbiltiy = 0;
+                    }
+                    // check if cleric ability triggered and eliminate wrong answers
+                    ClericAbility(clericAbiltiy);
                 }
-                else if (currentRoll == 2)
-                {
-                    clericAbiltiy = 2;
-                } else
-                {
-                    clericAbiltiy = 0;
-                }
-                // check if cleric ability triggered and eliminate wrong answers
-                ClericAbility(clericAbiltiy);
             }
         }
     }

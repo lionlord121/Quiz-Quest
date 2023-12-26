@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
         Troll = 22,
         Tyrant = 23,
         Wererat = 24,
-        Zombie = 25,
+        Zombie = 25
     };
 
     [Header("Info")]
@@ -72,7 +72,6 @@ public class EnemyController : MonoBehaviour
     [Header("SFX")]
     public AudioClip attackSound;
     public AudioClip hurtSound;
-    public AudioClip blockSound;
     private AudioSource source;
 
     public static EnemyController me;
@@ -81,6 +80,7 @@ public class EnemyController : MonoBehaviour
     {
         dead = false;
         enemy = (Enemy)enemyId;
+        source = GetComponent<AudioSource>();
         switch (enemy)
         {
             case Enemy.Assassin:
@@ -246,6 +246,8 @@ public class EnemyController : MonoBehaviour
     void GetsHurt()
     {
         StartCoroutine(DamageFlash());
+
+        //source.PlayOneShot(hurtSound);
 
         IEnumerator DamageFlash()
         {
