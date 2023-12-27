@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Loading.unity
     guid: 034cdc29d7fc7b34eb82e39640775d08
-  - enabled: 1
-    path: Assets/Scenes/Trivia.unity
-    guid: f3f1ef305d3a81d409a4601c8cfc8ed8
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}
